@@ -1,1 +1,0 @@
--keep class com.example.great_places.BuildConfig { *; }

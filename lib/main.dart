@@ -28,8 +28,10 @@ class MainApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           useMaterial3: true,
-          primarySwatch: Colors.indigo,
-          brightness: Brightness.dark,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.green,
+            brightness: Brightness.dark,
+          ),
         ),
         routes: {
           AppRoutes.HOME: (context) => const PlacesListPage(),
