@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
+import 'package:great_places/src/common/themes/dark_theme.dart';
 import 'package:great_places/src/common/utils/app_routes.dart';
 import 'package:great_places/src/features/home/data/great_place_repository.dart';
 import 'package:great_places/src/features/home/data/local_great_place_repository.dart';
@@ -35,21 +36,7 @@ class MainApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.green,
-            brightness: Brightness.dark,
-          ),
-          fontFamily: 'Poppins',
-          appBarTheme: const AppBarTheme(
-            elevation: 0,
-            titleTextStyle: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+        theme: darkTheme(),
         routes: {
           AppRoutes.HOME: (context) => const PlacesListPage(),
           AppRoutes.FORMROUTE: (context) => const PlaceFormPage(),

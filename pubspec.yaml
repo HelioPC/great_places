@@ -27,6 +27,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
+  assets:
+    - assets/images/no_place.jpg
+
   fonts:
     - family: Poppins
       fonts:

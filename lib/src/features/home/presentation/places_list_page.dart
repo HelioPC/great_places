@@ -39,6 +39,7 @@ class PlacesListPage extends StatelessWidget {
               child: Text('Store new places on your device'),
             ),
             child: ListView.builder(
+              padding: const EdgeInsets.all(20),
               itemCount: greatPlaces.length,
               itemBuilder: (context, index) {
                 final place = greatPlaces[index];
@@ -51,8 +52,16 @@ class PlacesListPage extends StatelessWidget {
                   leading: CircleAvatar(
                     backgroundImage: FileImage(place.image),
                   ),
-                  title: Text(place.title),
-                  subtitle: Text(place.location.address),
+                  title: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(
+                      place.title,
+                    ),
+                  ),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Text(place.location.address),
+                  ),
                   trailing: IconButton(
                     onPressed: () async {
                       greatPlaceControllerProvider.removePlace(place.id);
