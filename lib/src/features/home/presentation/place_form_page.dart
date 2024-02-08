@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:great_places/providers/great_places.dart';
-import 'package:great_places/widgets/image_input.dart';
-import 'package:great_places/widgets/location_input.dart';
+import 'package:great_places/src/features/home/presentation/great_place_controller.dart';
+import 'package:great_places/src/features/home/presentation/widgets/image_input.dart';
+import 'package:great_places/src/features/home/presentation/widgets/location_input.dart';
 import 'package:provider/provider.dart';
 
 class PlaceFormPage extends StatefulWidget {
@@ -38,7 +38,7 @@ class _PlaceFormPageState extends State<PlaceFormPage> {
       return;
     }
 
-    Provider.of<GreatPlaces>(context, listen: false).addPlace(
+    Provider.of<GreatPlaceController>(context, listen: false).addPlace(
       _titleController.text,
       _pickedImage!,
       _position!,

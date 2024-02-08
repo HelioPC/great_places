@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
-import 'package:great_places/pages/place_detail_page.dart';
-import 'package:great_places/pages/place_form_page.dart';
-import 'package:great_places/pages/places_list_page.dart';
-import 'package:great_places/providers/great_places.dart';
-import 'package:great_places/utils/app_routes.dart';
+import 'package:great_places/src/common/utils/app_routes.dart';
+import 'package:great_places/src/features/home/data/great_place_repository.dart';
+import 'package:great_places/src/features/home/data/local_great_place_repository.dart';
+import 'package:great_places/src/features/home/presentation/place_detail_page.dart';
+import 'package:great_places/src/features/home/presentation/place_form_page.dart';
+import 'package:great_places/src/features/home/presentation/places_list_page.dart';
+import 'package:great_places/src/features/home/presentation/great_place_controller.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -22,7 +24,14 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => GreatPlaces()),
+        Provider<GreatPlaceRepository>(
+          create: (_) => LocalGreatPlaceRepository(),
+        ),
+        ChangeNotifierProvider<GreatPlaceController>(
+            create: (context) => GreatPlaceController(
+                repository: context.read<GreatPlaceRepository>()
+            ),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

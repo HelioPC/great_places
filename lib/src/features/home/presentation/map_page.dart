@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:great_places/models/place.dart';
+import 'package:great_places/src/common/models/place.dart';
 
 class MapPage extends StatefulWidget {
   final PlaceLocation location;
