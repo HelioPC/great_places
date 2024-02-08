@@ -66,13 +66,17 @@ class _LocationInputState extends State<LocationInput> {
               width: 1,
               color: Colors.grey,
             ),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: _imagePreview != null
-              ? Image.network(
-                  _imagePreview!,
-                  fit: BoxFit.cover,
-                  width: double.infinity,
-                )
+              ? ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                    _imagePreview!,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
+              )
               : const Text('Without location'),
         ),
         Row(

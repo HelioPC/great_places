@@ -10,17 +10,8 @@ class PlacesListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 1,
-        centerTitle: true,
+        centerTitle: false,
         title: const Text('My places'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(AppRoutes.FORMROUTE);
-            },
-            icon: const Icon(Icons.add),
-          ),
-        ],
       ),
       body: FutureBuilder(
         future: Provider.of<GreatPlaces>(context, listen: false).loadPlaces(),
@@ -69,10 +60,16 @@ class PlacesListPage extends StatelessWidget {
               );
             },
             child: const Center(
-              child: Text('No places added'),
+              child: Text('Store new places on your device'),
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed(AppRoutes.FORMROUTE);
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }

@@ -32,6 +32,14 @@ class MainApp extends StatelessWidget {
             seedColor: Colors.green,
             brightness: Brightness.dark,
           ),
+          fontFamily: 'Poppins',
+          appBarTheme: const AppBarTheme(
+            elevation: 0,
+            titleTextStyle: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
         routes: {
           AppRoutes.HOME: (context) => const PlacesListPage(),
