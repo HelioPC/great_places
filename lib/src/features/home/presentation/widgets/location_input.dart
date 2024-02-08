@@ -64,13 +64,13 @@ class _LocationInputState extends State<LocationInput> {
           decoration: BoxDecoration(
             border: Border.all(
               width: 1,
-              color: Colors.grey,
+              color: Colors.white,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           child: _imagePreview != null
               ? ClipRRect(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(8),
                 child: Image.network(
                     _imagePreview!,
                     fit: BoxFit.cover,

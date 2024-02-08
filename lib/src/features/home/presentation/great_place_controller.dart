@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:great_places/src/features/home/data/great_place_repository.dart';
 import 'package:great_places/src/common/models/place.dart';
@@ -23,10 +22,10 @@ class GreatPlaceController extends ChangeNotifier {
   }
 
   Future<bool> removePlace(String id) async {
-    final result = await repository.removePlace(id);
+      final result = await repository.removePlace(id);
 
-    notifyListeners();
+      notifyListeners();
 
-    return result;
+      return result;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:great_places/src/features/home/presentation/great_place_controller.dart';
 import 'package:provider/provider.dart';
@@ -38,9 +39,12 @@ class PlacesListPage extends StatelessWidget {
             replacement: const Center(
               child: Text('Store new places on your device'),
             ),
-            child: ListView.builder(
+            child: ListView.separated(
               padding: const EdgeInsets.all(20),
               itemCount: greatPlaces.length,
+              separatorBuilder: (_, __) {
+                return const SizedBox(height: 20);
+              },
               itemBuilder: (context, index) {
                 final place = greatPlaces[index];
 
@@ -64,7 +68,60 @@ class PlacesListPage extends StatelessWidget {
                   ),
                   trailing: IconButton(
                     onPressed: () async {
-                      greatPlaceControllerProvider.removePlace(place.id);
+                      final result = await showAdaptiveDialog<bool>(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog.adaptive(
+                              title: const Text('Remove place'),
+                              content: Text(
+                                  'Place \'${place.title}\' will be removed'),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: const Text(
+                                    'Cancel',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(context, true);
+                                  },
+                                  child: const Text('Confirm'),
+                                ),
+                              ],
+                            );
+                          }).then((value) async {
+                        if (value ?? false) {
+                          final result = await greatPlaceControllerProvider
+                              .removePlace(place.id);
+
+                          return result;
+                        }
+
+                        return false;
+                      });
+
+                      debugPrint('dialog result = $result');
+
+                      if (context.mounted) {
+                        if (result) {
+                          final snackBar = SnackBar(
+                            backgroundColor: Colors.transparent,
+                            content: AwesomeSnackbarContent(
+                              title: 'Deleted!',
+                              message:
+                                  'The great place \'${place.title}\' was deleted successfully.',
+                              contentType: ContentType.success,
+                            ),
+                          );
+
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(snackBar);
+                        }
+                      }
                     },
                     icon: const Icon(Icons.delete),
                   ),

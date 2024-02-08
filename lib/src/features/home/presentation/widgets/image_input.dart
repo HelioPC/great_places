@@ -46,17 +46,20 @@ class _ImageInputState extends State<ImageInput> {
           decoration: BoxDecoration(
             border: Border.all(
               width: 1,
-              color: Colors.grey,
+              color: Colors.white,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           alignment: Alignment.center,
           child: _storedImage != null
-              ? Image.file(
-                  _storedImage!,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                )
+              ? ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Image.file(
+                    _storedImage!,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+              )
               : const Text('No image'),
         ),
         const SizedBox(height: 10),

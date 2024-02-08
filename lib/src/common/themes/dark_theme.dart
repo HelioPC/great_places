@@ -53,8 +53,10 @@ ThemeData darkTheme() {
     ),
     dialogBackgroundColor: MyColors.grey600,
     dialogTheme: DialogTheme(
+      backgroundColor: Colors.black38,
+      surfaceTintColor: Colors.grey,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(20),
       ),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
