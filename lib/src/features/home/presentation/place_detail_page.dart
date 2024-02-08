@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:great_places/models/place.dart';
-import 'package:great_places/pages/map_page.dart';
+import 'package:great_places/src/common/models/place.dart';
+import 'package:great_places/src/features/home/presentation/map_page.dart';
 
 class PlaceDetailPage extends StatelessWidget {
   const PlaceDetailPage({super.key});
