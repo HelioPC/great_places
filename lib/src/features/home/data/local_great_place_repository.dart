@@ -16,6 +16,8 @@ class LocalGreatPlaceRepository implements GreatPlaceRepository {
   Future<bool> addPlace(String title, File image, LatLng position) async {
     final address = await LocationUtils.getAddressFrom(position);
 
+    if (address == null) return false;
+
     final newPlace = Place(
       id: Random().nextDouble().toString(),
       title: title,

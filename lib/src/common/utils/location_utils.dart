@@ -15,12 +15,25 @@ class LocationUtils {
         '&key=$googleApi';
   }
 
-  static Future<String> getAddressFrom(LatLng position) async {
+  static Future<String?> getAddressFrom(LatLng position) async {
     String googleApi = EnvKeys.googleApi;
     String url =
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.latitude},${position.longitude}&key=$googleApi';
-    final response = await http.get(Uri.parse(url));
+    late http.Response response;
+    late String addressName;
 
-    return jsonDecode(response.body)['results'][0]['formatted_address'];
+    try {
+      response = await http.get(Uri.parse(url));
+    } catch (e) {
+      return null;
+    }
+
+    try {
+      addressName = jsonDecode(response.body)['results'][0]['formatted_address'];
+    } catch (e) {
+      return null;
+    }
+
+    return addressName;
   }
 }
