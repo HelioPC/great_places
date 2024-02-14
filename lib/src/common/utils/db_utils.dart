@@ -17,20 +17,20 @@ class DBUtils {
     );
   }
 
-  static Future<void> insert(String table, Map<String, Object> data) async {
+  static Future<int> insert(String table, Map<String, Object> data) async {
     final db = await DBUtils.database();
 
-    await db.insert(
+    return await db.insert(
       table,
       data,
       conflictAlgorithm: sql.ConflictAlgorithm.replace,
     );
   }
 
-  static Future<void> remove(String table, String id) async {
+  static Future<int> remove(String table, String id) async {
     final db = await DBUtils.database();
 
-    await db.delete(
+    return await db.delete(
       table,
       where: 'id = ?',
       whereArgs: [id],
