@@ -1,20 +1,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:great_places/src/features/home/presentation/great_place_controller.dart';
 import 'package:great_places/src/features/home/presentation/widgets/image_input.dart';
 import 'package:great_places/src/features/home/presentation/widgets/location_input.dart';
-import 'package:provider/provider.dart';
 
-class PlaceFormPage extends StatefulWidget {
+class PlaceFormPage extends ConsumerStatefulWidget {
   const PlaceFormPage({super.key});
 
   @override
-  State<PlaceFormPage> createState() => _PlaceFormPageState();
+  ConsumerState<PlaceFormPage> createState() => _PlaceFormPageState();
 }
 
-class _PlaceFormPageState extends State<PlaceFormPage> {
+class _PlaceFormPageState extends ConsumerState<PlaceFormPage> {
   final _titleController = TextEditingController();
   File? _pickedImage;
   LatLng? _position;
@@ -38,7 +38,7 @@ class _PlaceFormPageState extends State<PlaceFormPage> {
       return;
     }
 
-    Provider.of<GreatPlaceController>(context, listen: false).addPlace(
+    ref.read(greatPlaceControllerProvider.notifier).addPlace(
       _titleController.text,
       _pickedImage!,
       _position!,
