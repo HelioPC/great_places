@@ -17,20 +17,20 @@ GoRouter goRouter(ProviderRef ref) {
   final authRepository = ref.watch(authRepositoryProvider);
 
   return GoRouter(
-    initialLocation: AppRoutes.LOGIN,
+    initialLocation: AppRoutes.login.routeAsString(),
     debugLogDiagnostics: true,
     redirect: (context, state) {
       final path = state.uri.path;
       final isLoggedIn = authRepository.currentUser != null;
 
       if (isLoggedIn) {
-        if (path == AppRoutes.LOGIN) {
-          return AppRoutes.HOME;
+        if (path == AppRoutes.login.routeAsString()) {
+          return AppRoutes.home.routeAsString();
         } else {
-          if (path == AppRoutes.HOME ||
-              path == AppRoutes.FORMROUTE ||
-              path.startsWith(AppRoutes.DETAIL)) {
-            return AppRoutes.LOGIN;
+          if (path == AppRoutes.home.routeAsString() ||
+              path == AppRoutes.form.routeAsString() ||
+              path.startsWith(AppRoutes.detail.routeAsString())) {
+            return AppRoutes.login.routeAsString();
           }
         }
       }
@@ -41,7 +41,8 @@ GoRouter goRouter(ProviderRef ref) {
         GoRouterRefreshStream(authRepository.onAuthStateChanged()),
     routes: [
       GoRoute(
-        path: AppRoutes.LOGIN,
+        path: AppRoutes.login.routeAsString(),
+        name: AppRoutes.login.name,
         pageBuilder: (context, state) {
           return const NoTransitionPage(
             child: LoginPage(),
@@ -49,7 +50,8 @@ GoRouter goRouter(ProviderRef ref) {
         },
       ),
       GoRoute(
-        path: AppRoutes.SIGNUP,
+        path: AppRoutes.signup.routeAsString(),
+        name: AppRoutes.signup.name,
         pageBuilder: (context, state) {
           return const NoTransitionPage(
             child: SignUpPage(),
@@ -57,7 +59,8 @@ GoRouter goRouter(ProviderRef ref) {
         },
       ),
       GoRoute(
-        path: AppRoutes.HOME,
+        path: AppRoutes.home.routeAsString(),
+        name: AppRoutes.home.name,
         pageBuilder: (context, state) {
           return const NoTransitionPage(
             child: PlacesListPage(),
@@ -65,7 +68,8 @@ GoRouter goRouter(ProviderRef ref) {
         },
       ),
       GoRoute(
-        path: AppRoutes.FORMROUTE,
+        path: AppRoutes.form.routeAsString(),
+        name: AppRoutes.form.name,
         pageBuilder: (context, state) {
           return const NoTransitionPage(
             child: PlaceFormPage(),
@@ -73,7 +77,8 @@ GoRouter goRouter(ProviderRef ref) {
         },
       ),
       GoRoute(
-        path: AppRoutes.DETAIL,
+        path: AppRoutes.detail.routeAsString(),
+        name: AppRoutes.detail.name,
         pageBuilder: (context, state) {
           return const NoTransitionPage(
             child: PlaceDetailPage(),
