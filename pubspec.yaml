@@ -26,6 +26,7 @@ dependencies:
   path_provider: ^2.1.2
   riverpod_annotation: ^2.3.4
   sqflite: ^2.2.8+4
+  validatorless: ^1.2.3
 
 dev_dependencies:
   flutter_test:
@@ -42,6 +43,7 @@ flutter:
 
   assets:
     - assets/images/no_place.jpg
+    - assets/images/auth-img-01.jpg
 
   fonts:
     - family: Poppins

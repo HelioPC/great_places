@@ -1,6 +1,7 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:great_places/src/features/home/presentation/great_place_controller.dart';
 
 import 'package:great_places/src/common/router/app_routes.dart';
@@ -39,8 +40,7 @@ class PlacesListPage extends ConsumerWidget {
 
                   return ListTile(
                     onTap: () async {
-                      Navigator.of(context)
-                          .pushNamed(AppRoutes.DETAIL, arguments: place);
+                      context.pushNamed(AppRoutes.detail.name, extra: place);
                     },
                     leading: CircleAvatar(
                       backgroundImage: FileImage(place.image),
@@ -139,7 +139,7 @@ class PlacesListPage extends ConsumerWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushNamed(AppRoutes.FORMROUTE);
+          context.pushNamed(AppRoutes.form.name);
         },
         child: const Icon(Icons.add),
       ),
