@@ -2,9 +2,8 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:great_places/src/features/home/presentation/great_place_controller.dart';
-import 'package:great_places/src/common/models/place.dart';
 
-import 'package:great_places/src/common/utils/app_routes.dart';
+import 'package:great_places/src/common/router/app_routes.dart';
 
 class PlacesListPage extends ConsumerWidget {
   const PlacesListPage({super.key});

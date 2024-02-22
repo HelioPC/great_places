@@ -4,9 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:great_places/src/common/models/user_model.dart';
 import 'package:great_places/src/features/auth/data/auth_repository.dart';
 import 'package:path_provider/path_provider.dart';
+
+final authRepositoryProvider = Provider<FirebaseAuthRepository>((ref) {
+  return FirebaseAuthRepository(
+    auth: FirebaseAuth.instance,
+    fireStore: FirebaseFirestore.instance,
+    firebaseStorage: FirebaseStorage.instance,
+  );
+});
 
 class FirebaseAuthRepository implements AuthRepository {
   final FirebaseAuth auth;
