@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
               child: Align(
                 alignment: Alignment.center,
                 child: Container(
-                  margin: const EdgeInsets.only(top: 40),
+                  margin: const EdgeInsets.only(top: 36),
                   width: MediaQuery.sizeOf(context).width * 0.8,
                   child: Form(
                     key: _formKey,
@@ -85,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 20),
                         TextFormField(
                           controller: _passwordController,
                           onTapOutside: (_) => FocusScope.of(context).unfocus(),
@@ -113,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12),
                         RichText(
                           text: TextSpan(
                             text: 'Don\'t have an account? ',
