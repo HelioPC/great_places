@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:great_places/src/common/router/app_routes.dart';
@@ -8,6 +9,20 @@ import 'package:great_places/src/features/auth/presentation/sign_up/sign_up_page
 import 'package:great_places/src/features/home/presentation/place_detail_page.dart';
 import 'package:great_places/src/features/home/presentation/place_form_page.dart';
 import 'package:great_places/src/features/home/presentation/places_list_page.dart';
+
+CustomTransitionPage buildPageWithDefaultTransition<T>({
+  required BuildContext context,
+  required GoRouterState state,
+  required Widget child,
+}) {
+  return CustomTransitionPage<T>(
+    key: state.pageKey,
+    child: child,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      return FadeTransition(opacity: animation, child: child);
+    },
+  );
+}
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   return goRouter(ref);
@@ -44,8 +59,31 @@ GoRouter goRouter(ProviderRef ref) {
         path: AppRoutes.login.routeAsString(),
         name: AppRoutes.login.name,
         pageBuilder: (context, state) {
-          return const NoTransitionPage(
-            child: LoginPage(),
+          final routes = GoRouter.of(context).routerDelegate.currentConfiguration.routes;
+          late TextDirection textDirection;
+
+          if (routes.isEmpty || routes.length == 1) {
+            textDirection = TextDirection.rtl;
+          } else {
+            textDirection = TextDirection.ltr;
+          }
+
+          return CustomTransitionPage(
+            child: const LoginPage(),
+            transitionsBuilder: (context, animation1, animation2, child) {
+              return SlideTransition(
+                position: animation1.drive(
+                  Tween<Offset>(
+                    begin: const Offset(1, 0),
+                    end: Offset.zero,
+                  ).chain(
+                    CurveTween(curve: Curves.easeInCubic),
+                  ),
+                ),
+                textDirection: textDirection,
+                child: child,
+              );
+            },
           );
         },
       ),
@@ -53,8 +91,22 @@ GoRouter goRouter(ProviderRef ref) {
         path: AppRoutes.signup.routeAsString(),
         name: AppRoutes.signup.name,
         pageBuilder: (context, state) {
-          return const NoTransitionPage(
-            child: SignUpPage(),
+          return CustomTransitionPage(
+            child: const SignUpPage(),
+            transitionsBuilder: (context, animation1, animation2, child) {
+              return SlideTransition(
+                position: animation1.drive(
+                  Tween<Offset>(
+                    begin: const Offset(1, 0),
+                    end: Offset.zero,
+                  ).chain(
+                    CurveTween(curve: Curves.easeInCubic),
+                  ),
+                ),
+                textDirection: TextDirection.ltr,
+                child: child,
+              );
+            },
           );
         },
       ),
@@ -62,8 +114,10 @@ GoRouter goRouter(ProviderRef ref) {
         path: AppRoutes.home.routeAsString(),
         name: AppRoutes.home.name,
         pageBuilder: (context, state) {
-          return const NoTransitionPage(
-            child: PlacesListPage(),
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: const PlacesListPage(),
           );
         },
       ),
@@ -71,8 +125,10 @@ GoRouter goRouter(ProviderRef ref) {
         path: AppRoutes.form.routeAsString(),
         name: AppRoutes.form.name,
         pageBuilder: (context, state) {
-          return const NoTransitionPage(
-            child: PlaceFormPage(),
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: const PlaceFormPage(),
           );
         },
       ),
@@ -80,8 +136,10 @@ GoRouter goRouter(ProviderRef ref) {
         path: AppRoutes.detail.routeAsString(),
         name: AppRoutes.detail.name,
         pageBuilder: (context, state) {
-          return const NoTransitionPage(
-            child: PlaceDetailPage(),
+          return buildPageWithDefaultTransition(
+            context: context,
+            state: state,
+            child: const PlaceDetailPage(),
           );
         },
       ),
