@@ -24,6 +24,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
+  bool isLoading = false;
 
   bool get _isFormValid => _formKey.currentState?.validate() ?? false;
 
@@ -67,7 +68,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     GestureDetector(
-                      onTap: () async {
+                      onTap: isLoading ? null : () async {
                         await ref
                             .read(signupStateNotifier.notifier)
                             .pickImage(context);
@@ -118,131 +119,139 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                 child: Container(
                   margin: const EdgeInsets.only(top: 36),
                   width: MediaQuery.sizeOf(context).width * 0.8,
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: _nameController,
-                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                          onFieldSubmitted: (_) => setState(() {}),
-                          keyboardType: TextInputType.text,
-                          textInputAction: TextInputAction.next,
-                          validator: Validatorless.multiple([
-                            Validatorless.required('Required field'),
-                            Validatorless.min(2, 'Invalid name'),
-                            Validatorless.max(16, 'Invalid name'),
-                          ]),
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.person),
-                            prefixIconColor: MyColors.green,
-                            isDense: true,
-                            labelText: 'Username',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextFormField(
-                          controller: _emailController,
-                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                          onFieldSubmitted: (_) => setState(() {}),
-                          keyboardType: TextInputType.emailAddress,
-                          textInputAction: TextInputAction.next,
-                          validator: Validatorless.multiple([
-                            Validatorless.required('Required field'),
-                            Validatorless.email('Invalid name'),
-                          ]),
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.email),
-                            prefixIconColor: MyColors.green,
-                            isDense: true,
-                            labelText: 'Email',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextFormField(
-                          controller: _passwordController,
-                          onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                          onFieldSubmitted: (_) => setState(() {}),
-                          keyboardType: TextInputType.text,
-                          obscureText: true,
-                          textInputAction: TextInputAction.done,
-                          validator: Validatorless.multiple([
-                            Validatorless.required('Required field'),
-                            Validatorless.min(
-                                6, 'Password must have at least 6 characters'),
-                            Validatorless.regex(
-                              RegExp(
-                                r'^(?=.*?[0-9])(?=.*?[^\w\s]).{6,}$',
+                  child: Visibility(
+                    visible: !isLoading,
+                    replacement: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: _nameController,
+                            onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                            onFieldSubmitted: (_) => setState(() {}),
+                            keyboardType: TextInputType.text,
+                            textInputAction: TextInputAction.next,
+                            validator: Validatorless.multiple([
+                              Validatorless.required('Required field'),
+                              Validatorless.min(2, 'Invalid name'),
+                              Validatorless.max(16, 'Invalid name'),
+                            ]),
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.person),
+                              prefixIconColor: MyColors.green,
+                              isDense: true,
+                              labelText: 'Username',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              'Password must contain 1 number and 1 special character',
-                            ),
-                          ]),
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.lock),
-                            prefixIconColor: MyColors.green,
-                            isDense: true,
-                            labelText: 'Confirm your password',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 12),
-                        RichText(
-                          text: TextSpan(
-                            text: 'Already have an account? ',
-                            style: const TextStyle(
-                              fontSize: 12,
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            controller: _emailController,
+                            onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                            onFieldSubmitted: (_) => setState(() {}),
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            validator: Validatorless.multiple([
+                              Validatorless.required('Required field'),
+                              Validatorless.email('Invalid name'),
+                            ]),
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.email),
+                              prefixIconColor: MyColors.green,
+                              isDense: true,
+                              labelText: 'Email',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
+                          ),
+                          const SizedBox(height: 20),
+                          TextFormField(
+                            controller: _passwordController,
+                            onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                            onFieldSubmitted: (_) => setState(() {}),
+                            keyboardType: TextInputType.text,
+                            obscureText: true,
+                            textInputAction: TextInputAction.done,
+                            validator: Validatorless.multiple([
+                              Validatorless.required('Required field'),
+                              Validatorless.min(
+                                  6, 'Password must have at least 6 characters'),
+                              Validatorless.regex(
+                                RegExp(
+                                  r'^(?=.*?[0-9])(?=.*?[^\w\s]).{6,}$',
+                                ),
+                                'Password must contain 1 number and 1 special character',
+                              ),
+                            ]),
+                            decoration: InputDecoration(
+                              prefixIcon: const Icon(Icons.lock),
+                              prefixIconColor: MyColors.green,
+                              isDense: true,
+                              labelText: 'Confirm your password',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          RichText(
+                            text: TextSpan(
+                              text: 'Already have an account? ',
+                              style: const TextStyle(
+                                fontSize: 12,
+                              ),
+                              children: [
+                                TextSpan(
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      context.pushNamed(AppRoutes.login.name);
+                                    },
+                                  text: 'Login',
+                                  style: const TextStyle(
+                                    color: MyColors.green,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Spacer(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              TextSpan(
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    context.pushNamed(AppRoutes.login.name);
-                                  },
-                                text: 'Login',
-                                style: const TextStyle(
-                                  color: MyColors.green,
-                                  fontWeight: FontWeight.bold,
+                              ElevatedButton(
+                                onPressed: _isFormValid && !isLoading
+                                    ? () async {
+                                  setState(() => isLoading = true);
+                                  ref
+                                      .read(signupStateNotifier.notifier)
+                                      .setData(
+                                    name: _nameController.text,
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                  );
+                                  await ref
+                                      .read(signupControllerProvider)
+                                      .signUp();
+                                  setState(() => isLoading = false);
+                                }
+                                    : null,
+                                child: const Text(
+                                  'Register',
+                                  style: TextStyle(color: Colors.black),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        const Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              onPressed: _isFormValid
-                                  ? () async {
-                                      ref
-                                          .read(signupStateNotifier.notifier)
-                                          .setData(
-                                            name: _nameController.text,
-                                            email: _emailController.text,
-                                            password: _passwordController.text,
-                                          );
-                                      await ref
-                                          .read(signupControllerProvider)
-                                          .signUp();
-                                    }
-                                  : null,
-                              child: const Text(
-                                'Register',
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
-                      ],
+                          const SizedBox(height: 24),
+                        ],
+                      ),
                     ),
                   ),
                 ),
