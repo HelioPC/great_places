@@ -35,7 +35,7 @@ class FirebaseAuthRepository implements AuthRepository {
 
     return UserModel(
       uid: user.uid,
-      name: user.displayName!,
+      name: user.displayName ?? 'Random',
       email: user.email!,
       profileImage: user.photoURL,
     );
@@ -55,7 +55,9 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Stream<UserModel?> onAuthStateChanged() {
-    return auth.authStateChanges().map((user) => _userToUserModel(user));
+    return auth.authStateChanges().map((user) {
+      return _userToUserModel(user);
+    });
   }
 
   @override
@@ -78,36 +80,42 @@ class FirebaseAuthRepository implements AuthRepository {
     required String password,
     required File? image,
   }) async {
-    final credential = await auth.createUserWithEmailAndPassword(
+    await auth
+        .createUserWithEmailAndPassword(
       email: email,
       password: password,
+    )
+        .then(
+      (value) async {
+        if (value.user != null) {
+          late String imageUrl;
+
+          if (image != null) {
+            imageUrl = await _saveImageFile(
+              image,
+              'profileImage/${value.user!.uid}',
+            );
+          } else {
+            imageUrl = await _saveImageFile(
+              await _getDefaultImage(),
+              'profileImage/${value.user!.uid}',
+            );
+          }
+
+          await value.user?.updateDisplayName(name);
+          await value.user?.updatePhotoURL(imageUrl);
+
+          await signInWithEmailAndPassword(email: email, password: password);
+
+          await _saveUserInfo(
+            uid: value.user!.uid,
+            email: email,
+            name: name,
+            imageUrl: imageUrl,
+          );
+        }
+      },
     );
-
-    if (credential.user != null) {
-      late String imageUrl;
-
-      if (image != null) {
-        imageUrl = await _saveImageFile(
-          image,
-          'profileImage/${credential.user!.uid}',
-        );
-      } else {
-        imageUrl = await _saveImageFile(
-          await _getDefaultImage(),
-          'profileImage/${credential.user!.uid}',
-        );
-      }
-
-      await credential.user?.updateDisplayName(name);
-      await credential.user?.updatePhotoURL(imageUrl);
-
-      await _saveUserInfo(
-        uid: credential.user!.uid,
-        email: email,
-        name: name,
-        imageUrl: imageUrl,
-      );
-    }
   }
 
   Future<void> _saveUserInfo({
@@ -139,7 +147,7 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   Future<File> _getDefaultImage() async {
-    const path = 'images/profileImage.png';
+    const path = 'images/profileImage.jpg';
     final byteData = await rootBundle.load('assets/$path');
     final file = File('${(await getTemporaryDirectory()).path}/$path');
 
