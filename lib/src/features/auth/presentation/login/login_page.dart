@@ -1,18 +1,20 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:great_places/src/common/router/app_routes.dart';
 import 'package:great_places/src/common/utils/my_colors.dart';
+import 'package:great_places/src/features/auth/presentation/login/login_controller.dart';
 import 'package:validatorless/validatorless.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -69,6 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                           controller: _emailController,
                           onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                          onFieldSubmitted: (_) => setState(() {}),
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
                           validator: Validatorless.multiple([
@@ -89,6 +92,7 @@ class _LoginPageState extends State<LoginPage> {
                         TextFormField(
                           controller: _passwordController,
                           onTapOutside: (_) => FocusScope.of(context).unfocus(),
+                          onFieldSubmitted: (_) => setState(() {}),
                           keyboardType: TextInputType.text,
                           obscureText: true,
                           textInputAction: TextInputAction.done,
@@ -140,7 +144,16 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             ElevatedButton(
-                              onPressed: _isFormValid ? () {} : null,
+                              onPressed: _isFormValid
+                                  ? () async {
+                                      await ref
+                                          .read(loginControllerProvider)
+                                          .login(
+                                            email: _emailController.text,
+                                            password: _passwordController.text,
+                                          );
+                                    }
+                                  : null,
                               child: const Text(
                                 'Enter',
                                 style: TextStyle(color: Colors.black),
