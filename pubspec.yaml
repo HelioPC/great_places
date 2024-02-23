@@ -45,6 +45,7 @@ flutter:
   assets:
     - assets/images/no_place.jpg
     - assets/images/auth-img-01.jpg
+    - assets/images/profileImage.jpg
 
   fonts:
     - family: Poppins

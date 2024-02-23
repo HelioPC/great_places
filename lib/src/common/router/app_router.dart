@@ -39,14 +39,15 @@ GoRouter goRouter(ProviderRef ref) {
       final isLoggedIn = authRepository.currentUser != null;
 
       if (isLoggedIn) {
-        if (path == AppRoutes.login.routeAsString()) {
+        if (path == AppRoutes.login.routeAsString() ||
+            path == AppRoutes.signup.routeAsString()) {
           return AppRoutes.home.routeAsString();
-        } else {
-          if (path == AppRoutes.home.routeAsString() ||
-              path == AppRoutes.form.routeAsString() ||
-              path.startsWith(AppRoutes.detail.routeAsString())) {
-            return AppRoutes.login.routeAsString();
-          }
+        }
+      } else {
+        if (path == AppRoutes.home.routeAsString() ||
+            path == AppRoutes.form.routeAsString() ||
+            path.startsWith(AppRoutes.detail.routeAsString())) {
+          return AppRoutes.login.routeAsString();
         }
       }
 
@@ -59,7 +60,8 @@ GoRouter goRouter(ProviderRef ref) {
         path: AppRoutes.login.routeAsString(),
         name: AppRoutes.login.name,
         pageBuilder: (context, state) {
-          final routes = GoRouter.of(context).routerDelegate.currentConfiguration.routes;
+          final routes =
+              GoRouter.of(context).routerDelegate.currentConfiguration.routes;
           late TextDirection textDirection;
 
           if (routes.isEmpty || routes.length == 1) {
