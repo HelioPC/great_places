@@ -2,6 +2,7 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:great_places/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:great_places/src/features/home/presentation/great_place_controller.dart';
 
 import 'package:great_places/src/common/router/app_routes.dart';
@@ -17,6 +18,22 @@ class PlacesListPage extends ConsumerWidget {
       appBar: AppBar(
         centerTitle: false,
         title: const Text('My places'),
+      ),
+      drawer: Drawer(
+        child: SafeArea(
+          child: ListView(
+            padding: const EdgeInsets.all(10),
+            children: [
+              ListTile(
+                onTap: () async {
+                  await ref.read(authRepositoryProvider).signOut();
+                },
+                leading: const Icon(Icons.logout),
+                title: const Text('Logout'),
+              ),
+            ],
+          ),
+        ),
       ),
       body: RefreshIndicator.adaptive(
         onRefresh: () async {
