@@ -7,6 +7,10 @@ ThemeData darkTheme() {
   final ThemeData base = ThemeData.dark(useMaterial3: true);
 
   return base.copyWith(
+    drawerTheme: const DrawerThemeData(
+      backgroundColor: MyColors.black87,
+      surfaceTintColor: MyColors.black87,
+    ),
     colorScheme: const ColorScheme.dark(
       background: MyColors.black87,
       primary: MyColors.green,

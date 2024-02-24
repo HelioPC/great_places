@@ -5,7 +5,7 @@ import 'package:great_places/src/common/utils/location_utils.dart';
 
 void main() async {
   const String apiKey = 'GOOGLE_MAPS_API_KEY';
-  const String apiValue = 'PUT_YOUR_REAL_API_KEY_HERE';
+  const String apiValue = 'AIzaSyC0Od-jmTecFLv7uEtiBeeaBkN9uBDheu0';
 
   FlutterConfig.loadValueForTesting({
     apiKey: apiValue,
