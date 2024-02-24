@@ -3,6 +3,7 @@ import 'package:adaptive_action_sheet/adaptive_action_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:great_places/src/common/widgets/adaptive_widgets.dart';
 import 'package:great_places/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:great_places/src/features/auth/presentation/sign_up/sign_up_page.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,17 +27,43 @@ class SignupController {
 
   SignupController({required this.ref});
 
-  Future<void> signUp() async {
+  Future<void> signUp(BuildContext context) async {
     final state = ref.watch(signupStateNotifier);
 
     if (!ref.read(signupStateNotifier.notifier).isDataValid()) return;
 
-    await ref.read(authRepositoryProvider).signUp(
+    final result = await ref.read(authRepositoryProvider).signUp(
           name: state.name,
           email: state.email,
           password: state.password,
           image: state.image,
         );
+
+    result.fold(
+          (exception) {
+        if (context.mounted) {
+          showAdaptiveDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog.adaptive(
+                title: const Text('An error occur'),
+                content: Text(exception.toString()),
+                actions: [
+                  AdaptiveWidgets.adaptiveAction(
+                      context: context,
+                      onPressed: () {
+                        if (context.canPop()) context.pop();
+                      },
+                      child: const Text('Ok')
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      },
+          (success) => null,
+    );
   }
 }
 

@@ -1,16 +1,18 @@
 import 'dart:io';
 
+import 'package:dartz/dartz.dart';
+import 'package:great_places/src/common/exceptions/auth_exception.dart';
 import 'package:great_places/src/common/models/user_model.dart';
 
 abstract class AuthRepository {
   Future<UserModel?> getCurrentUserInfo();
 
-  Future<void> signInWithEmailAndPassword({
+  Future<Either<AuthException, void>> signInWithEmailAndPassword({
     required String email,
     required String password,
   });
 
-  Future<void> signUp({
+  Future<Either<AuthException, void>> signUp({
     required String name,
     required String email,
     required String password,

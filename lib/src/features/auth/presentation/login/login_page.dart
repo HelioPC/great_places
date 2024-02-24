@@ -158,11 +158,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                         await ref
                                             .read(loginControllerProvider)
                                             .login(
+                                              context: context,
                                               email: _emailController.text,
                                               password:
                                                   _passwordController.text,
                                             );
-                                        setState(() => isLoading = true);
+                                        setState(() => isLoading = false);
                                       }
                                     : null,
                                 child: const Text(

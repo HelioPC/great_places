@@ -1,10 +1,13 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:great_places/src/common/exceptions/auth_exception.dart';
 import 'package:great_places/src/common/models/user_model.dart';
 import 'package:great_places/src/features/auth/data/auth_repository.dart';
 import 'package:path_provider/path_provider.dart';
@@ -61,11 +64,20 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<void> signInWithEmailAndPassword({
+  Future<Either<AuthException, void>> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
-    await auth.signInWithEmailAndPassword(email: email, password: password);
+    try {
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+
+      return const Right(null);
+    } on FirebaseAuthException catch (e) {
+      debugPrint('auth exception code: ${e.code}');
+      return Left(AuthException(code: e.code));
+    } on Exception catch (e) {
+      return Left(AuthException(code: e.toString()));
+    }
   }
 
   @override
@@ -74,48 +86,54 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
-  Future<void> signUp({
+  Future<Either<AuthException, void>> signUp({
     required String name,
     required String email,
     required String password,
     required File? image,
   }) async {
-    await auth
-        .createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    )
-        .then(
-      (value) async {
-        if (value.user != null) {
-          late String imageUrl;
+    try {
+      await auth
+          .createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      )
+          .then(
+            (value) async {
+          if (value.user != null) {
+            late String imageUrl;
 
-          if (image != null) {
-            imageUrl = await _saveImageFile(
-              image,
-              'profileImage/${value.user!.uid}',
-            );
-          } else {
-            imageUrl = await _saveImageFile(
-              await _getDefaultImage(),
-              'profileImage/${value.user!.uid}',
+            if (image != null) {
+              imageUrl = await _saveImageFile(
+                image,
+                'profileImage/${value.user!.uid}',
+              );
+            } else {
+              imageUrl = await _saveImageFile(
+                await _getDefaultImage(),
+                'profileImage/${value.user!.uid}',
+              );
+            }
+
+            await value.user?.updateDisplayName(name);
+            await value.user?.updatePhotoURL(imageUrl);
+
+            await signInWithEmailAndPassword(email: email, password: password);
+
+            await _saveUserInfo(
+              uid: value.user!.uid,
+              email: email,
+              name: name,
+              imageUrl: imageUrl,
             );
           }
+        },
+      );
 
-          await value.user?.updateDisplayName(name);
-          await value.user?.updatePhotoURL(imageUrl);
-
-          await signInWithEmailAndPassword(email: email, password: password);
-
-          await _saveUserInfo(
-            uid: value.user!.uid,
-            email: email,
-            name: name,
-            imageUrl: imageUrl,
-          );
-        }
-      },
-    );
+      return const Right(null);
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthException(code: e.code));
+    }
   }
 
   Future<void> _saveUserInfo({

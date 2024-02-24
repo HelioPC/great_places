@@ -238,7 +238,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                                   );
                                   await ref
                                       .read(signupControllerProvider)
-                                      .signUp();
+                                      .signUp(context);
                                   setState(() => isLoading = false);
                                 }
                                     : null,
