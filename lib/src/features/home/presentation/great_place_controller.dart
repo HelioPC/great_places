@@ -1,31 +1,62 @@
+import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:great_places/src/features/home/data/great_place_repository.dart';
 import 'package:great_places/src/common/models/place.dart';
+import 'package:great_places/src/features/home/data/local_great_place_repository.dart';
 
-class GreatPlaceController extends ChangeNotifier {
-  GreatPlaceController({required this.repository});
+final greatPlaceControllerProvider =
+    AsyncNotifierProvider<GreatPlaceController, List<Place>>(() {
+  return GreatPlaceController();
+});
 
-  final GreatPlaceRepository repository;
+class GreatPlaceController extends AsyncNotifier<List<Place>> {
+  @override
+  FutureOr<List<Place>> build() async {
+    return _loadPlaces();
+  }
 
-  Future<List<Place>> loadPlaces() async {
-    return await repository.loadPlaces();
+  Future<void> refresh() async {
+    state =  const AsyncValue.loading();
+    state = await AsyncValue.guard(() async {
+      return await _loadPlaces();
+    });
+  }
+
+  Future<List<Place>> _loadPlaces() async {
+    return await ref.read(greatPlaceRepositoryProvider).loadPlaces();
   }
 
   Future<bool> addPlace(String title, File image, LatLng position) async {
-    final result = await repository.addPlace(title, image, position);
+    state = const AsyncValue.loading();
+    late bool result;
 
-    notifyListeners();
+    state = await AsyncValue.guard(() async {
+      final value = await ref.read(greatPlaceRepositoryProvider).addPlace(
+            title,
+            image,
+            position,
+          );
+      result = value;
+
+      return _loadPlaces();
+    });
 
     return result;
   }
 
   Future<bool> removePlace(String id) async {
-      final result = await repository.removePlace(id);
+    state = const AsyncValue.loading();
+    late bool result;
 
-      notifyListeners();
+    state = await AsyncValue.guard(() async {
+      final value =
+          await ref.read(greatPlaceRepositoryProvider).removePlace(id);
+      result = value;
 
-      return result;
+      return _loadPlaces();
+    });
+
+    return result;
   }
 }

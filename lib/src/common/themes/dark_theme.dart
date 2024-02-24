@@ -51,9 +51,8 @@ ThemeData darkTheme() {
         ),
       ),
     ),
-    dialogBackgroundColor: MyColors.grey600,
     dialogTheme: DialogTheme(
-      backgroundColor: Colors.black38,
+      backgroundColor: MyColors.black87,
       surfaceTintColor: Colors.grey,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),

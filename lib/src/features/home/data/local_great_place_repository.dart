@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart' as syspath;
@@ -8,6 +9,10 @@ import 'package:great_places/src/features/home/data/great_place_repository.dart'
 import 'package:great_places/src/common/models/place.dart';
 import 'package:great_places/src/common/utils/db_utils.dart';
 import 'package:great_places/src/common/utils/location_utils.dart';
+
+final greatPlaceRepositoryProvider = Provider<GreatPlaceRepository>((ref) {
+  return LocalGreatPlaceRepository();
+});
 
 class LocalGreatPlaceRepository implements GreatPlaceRepository {
   List<Place> _list = [];
