@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:great_places/src/common/models/place.dart';
 import 'package:great_places/src/common/router/app_routes.dart';
 import 'package:great_places/src/common/router/go_router_refresh_stream.dart';
 import 'package:great_places/src/features/auth/data/firebase_auth_repository.dart';
@@ -138,10 +139,12 @@ GoRouter goRouter(ProviderRef ref) {
         path: AppRoutes.detail.routeAsString(),
         name: AppRoutes.detail.name,
         pageBuilder: (context, state) {
+          final place = state.extra as Place?;
+
           return buildPageWithDefaultTransition(
             context: context,
             state: state,
-            child: const PlaceDetailPage(),
+            child: PlaceDetailPage(place: place),
           );
         },
       ),

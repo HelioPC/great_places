@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:great_places/src/common/widgets/custom_drawer.dart';
-import 'package:great_places/src/features/auth/data/firebase_auth_repository.dart';
 import 'package:great_places/src/features/home/presentation/great_place_controller.dart';
 
 import 'package:great_places/src/common/router/app_routes.dart';
